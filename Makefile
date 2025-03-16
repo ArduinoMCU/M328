@@ -56,3 +56,4 @@ flash: $(BIN) $(HEX)
 # Erase Flash (Requires AVRDUDE)
 erase:
 	avrdude -cusbasp -p$(MCU) -Pusb -e
+
