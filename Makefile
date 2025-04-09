@@ -1,8 +1,16 @@
+# Compier path:
+COMP_PATH=./tools/avr-gcc/bin
+AVRDUDE_PATH=./tools/avrdude
+
 # MCU and Compiler Settings
-MCU=atmega328
-CC=avr-gcc
-OBJCOPY=avr-objcopy
+MCU=atmega328p
+CC=$(COMP_PATH)/avr-gcc
+OBJCOPY=$(COMP_PATH)/avr-objcopy
 OPTIMIZE=s
+
+# Arduino port for flashing
+PORT ?= /dev/ttyUSB0
+export PORT
 
 # Compiler and Linker Flags
 CFLAGS=-mmcu=$(MCU) -Wall -O$(OPTIMIZE) -Iincludes
@@ -51,9 +59,14 @@ clean:
 
 # Flashing (Requires AVRDUDE)
 flash: $(BIN) $(HEX)
-	avrdude -cusbasp -p$(MCU) -Pusb -Uflash:w:$(BIN):r
+	$(AVRDUDE_PATH)/avrdude -cusbasp -p$(MCU) -Pusb -Uflash:w:$(BIN):r
+
+flash_arduino: $(BIN) $(HEX)
+	$(AVRDUDE_PATH)/avrdude -carduino -p$(MCU) -P $(PORT) -b115200 -Uflash:w:$(BIN):r
 
 # Erase Flash (Requires AVRDUDE)
 erase:
-	avrdude -cusbasp -p$(MCU) -Pusb -e
+	$(AVRDUDE_PATH)/avrdude -cusbasp -p$(MCU) -Pusb -e
 
+
+.PHONY: all clean flash erase size

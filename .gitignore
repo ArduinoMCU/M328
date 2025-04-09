@@ -2,3 +2,5 @@ builds/main.*
 builds/BIN/*
 builds/HEX/*
 /github.txt
+tools/avr-gcc/
+tools/avrdude/
